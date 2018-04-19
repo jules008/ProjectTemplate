@@ -13,6 +13,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'===============================================================
+' Form FrmModGen
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 19 Apr 18
+'===============================================================
+
 Option Explicit
 
 
@@ -42,4 +50,8 @@ Private Sub BtnGen_Click()
     Print #ModFile,
     Close #ModFile
     Hide
+End Sub
+
+Private Sub UserForm_Click()
+
 End Sub

@@ -13,6 +13,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'===============================================================
+' Form FrmDBClassGen
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 19 Apr 18
+'===============================================================
+
 
 Option Explicit
 Const PRTE_OR_PUB As Integer = 0

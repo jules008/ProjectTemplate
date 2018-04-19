@@ -7,16 +7,12 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'==========================================================
-' V0 0.01 - Initial Version
-' Date - 11/10/16
-'==========================================================
-' Methods
+'===============================================================
+' Class ClsMailSystem
+'===============================================================
+' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-
-' GetParentFromPtr - Private routine to copy memory address of parent class
-' DisplayEmail - displays email before sending
-' SendEmail - Sends email without displaying
+' Date - 12 Oct 16
 '===============================================================
 Option Explicit
 Private pOutlookApp As Outlook.Application

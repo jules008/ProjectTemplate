@@ -8,16 +8,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
-' v0,0 - Initial version
+' Class ClsMailItem
+'===============================================================
+' v1.0.0 - Initial Version
 '---------------------------------------------------------------
 ' Date - 12 Oct 16
-'===============================================================
-' Methods
-'---------------------------------------------------------------
-' LoadDB - Load Item from DB
-' NewDB - creates a new Item in the DB
-' UpdateDB - Update Item to database
-' DeleteDB - Delete Item from database
 '===============================================================
 Option Explicit
 Private pEmailNo As Integer

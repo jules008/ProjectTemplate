@@ -1,4 +1,11 @@
 Attribute VB_Name = "ModProjectInOut"
+'===============================================================
+' Module ModProjectInOut
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 19 Apr 18
+'===============================================================
 Const EXPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Project Template\Library\Dev\"
 Const PROJECT_FILE_NAME As String = "ProjectTemplate"
 
