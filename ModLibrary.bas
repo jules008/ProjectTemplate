@@ -86,27 +86,27 @@ Public Sub SpellCheck(ByRef Cntrls As Collection)
             Cntrl = RngSpell
         End If
     Next
-    
+    Set RngSpell = Nothing
 End Sub
 
 ' ===============================================================
 ' RecordsetPrint
 ' sends contents of recordset to debug window
 ' ---------------------------------------------------------------
-Public Sub RecordsetPrint(RST As Recordset)
+Public Sub RecordsetPrint(rst As Recordset)
     On Error Resume Next
     
     Dim DBString As String
     Dim RSTField As Field
     Dim i As Integer
 
-    ReDim AyFields(RST.Fields.Count)
+    ReDim AyFields(rst.Fields.Count)
     
-    Do Until RST.EOF
-        For i = 0 To RST.Fields.Count - 1
-             DBString = DBString & RST.Fields(i).Value & ", "
+    Do Until rst.EOF
+        For i = 0 To rst.Fields.Count - 1
+             DBString = DBString & rst.Fields(i).Value & ", "
         Next
-        RST.MoveNext
+        rst.MoveNext
         Debug.Print DBString
         DBString = ""
     Loop
@@ -150,7 +150,7 @@ Sub CopyTextToClipboard()
     obj.SetText Txt
     obj.PutInClipboard
     
-    MsgBox "There is now text copied to your clipboard!", vbInformation
+    MsgBox "There is now text copied to your clipboard!", vbInformation, APP_NAME
 
 End Sub
 
@@ -166,3 +166,166 @@ Public Sub ColourConvert()
      Debug.Print Colour1
 
 End Sub
+
+' ===============================================================
+' AddCheckBoxes
+' Adds checkboxes to selected cells
+' ---------------------------------------------------------------
+Sub AddCheckBoxes()
+    On Error Resume Next
+    Dim c As Range, myRange As Range
+    Set myRange = Selection
+    For Each c In myRange.Cells
+        ActiveSheet.CheckBoxes.Add(c.Left, c.Top, c.Width, c.Height).Select
+            With Selection
+                .LinkedCell = c.Address
+                .Characters.Text = ""
+                .Name = c.Address
+            End With
+            c.Select
+            With Selection
+                .FormatConditions.Delete
+                .FormatConditions.Add Type:=xlExpression, _
+                    Formula1:="=" & c.Address & "=TRUE"
+                '.FormatConditions(1).Font.ColorIndex = 6 'change for other color when ticked
+                '.FormatConditions(1).Interior.ColorIndex = 6 'change for other color when ticked
+                '.Font.ColorIndex = 2 'cell background color = White
+            End With
+        Next
+        myRange.Select
+        Set c = Nothing
+        Set myRange = Nothing
+    
+End Sub
+
+' ===============================================================
+' IsProcessRunning
+' Checks whether Windows application is running
+' ---------------------------------------------------------------
+Function IsProcessRunning(process As String) As Boolean
+    Dim objList As Object
+
+    Set objList = GetObject("winmgmts:") _
+        .ExecQuery("select * from win32_process where name='" & process & "'")
+
+    If objList.Count > 0 Then
+        IsProcessRunning = True
+    Else
+        IsProcessRunning = False
+    End If
+
+End Function
+
+' ===============================================================
+' OutlookRunning
+' Checks whether Outlook application is running
+' ---------------------------------------------------------------
+Function OutlookRunning() As Boolean
+    Dim oOutlook As Object
+
+    On Error Resume Next
+    Set oOutlook = GetObject(, "Outlook.Application")
+    On Error GoTo 0
+
+    If oOutlook Is Nothing Then
+        OutlookRunning = False
+    Else
+        OutlookRunning = True
+    End If
+End Function
+
+' ===============================================================
+' GetTextLineNo
+' returns the number of lines in a csv or text file
+' ---------------------------------------------------------------
+Public Function GetTextLineNo(FileName As String) As Integer
+    Dim wb As Workbook
+    
+    For Each wb In Workbooks
+        If wb.FullName = FileName Then wb.Close (False)
+    Next wb
+   
+    Set wb = Workbooks.Open(FileName)
+    
+    If Not wb Is Nothing Then
+        With wb.Worksheets(1)
+        
+            GetTextLineNo = .Cells(.Rows.Count, "A").End(xlUp).Row
+            wb.Close savechanges:=False
+        End With
+    End If
+    
+    Set wb = Nothing
+End Function
+
+' ===============================================================
+' PrintDoc
+' Prints any document
+' ---------------------------------------------------------------
+Public Function PrintDoc(FileName As String)
+    Dim X As Long
+    
+    On Error Resume Next
+    
+    X = ShellExecute(0, "Print", FileName, 0&, 0&, 3)
+
+End Function
+
+' ===============================================================
+' OpenDoc
+' Opens any document
+' ---------------------------------------------------------------
+Public Function OpenDoc(FileName As String)
+    Dim X As Long
+    
+'    On Error Resume Next
+    
+    X = ShellExecute(0, "Open", FileName, "", "", vbNormalNoFocus)
+
+End Function
+
+' ===============================================================
+' IsFileOpen
+' checks if file is open
+' ---------------------------------------------------------------
+Function IsFileOpen(FileName As String)
+    Dim ff As Long, ErrNo As Long
+
+    On Error Resume Next
+    ff = FreeFile()
+    Open FileName For Input Lock Read As #ff
+    Close ff
+    ErrNo = Err
+    On Error GoTo 0
+
+    Select Case ErrNo
+    Case 0:    IsFileOpen = False
+    Case 70:   IsFileOpen = True
+    Case Else: Error ErrNo
+    End Select
+End Function
+
+' ===============================================================
+' JoinRecordsets
+' Joins two recordsets together
+' ---------------------------------------------------------------
+Function JoinRecordsets(ByVal Rst1 As Recordset, Rst2 As Recordset) As Recordset
+    Dim i As Integer
+    
+    On Error Resume Next
+    
+    With Rst2
+        .MoveFirst
+        Do While Not .EOF
+            Rst1.addnew
+            
+            For i = 0 To .Fields.Count - 1
+                Rst1.Fields(i) = Rst2.Fields(i)
+            Next
+            Rst1.Update
+            .MoveNext
+        Loop
+    End With
+    Set JoinRecordsets = Rst1
+End Function
+

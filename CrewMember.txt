@@ -1,0 +1,11 @@
+ID,  dbLong
+Tid,  dbLong
+CrewNo,  dbText
+Role,  dbText
+FFname,  dbText
+Station,  dbText
+Driver,  dbBoolean
+OIC,  dbBoolean
+STC,  dbBoolean
+Contract,  dbText
+TotalHrs,  dbLong

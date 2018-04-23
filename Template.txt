@@ -1,0 +1,8 @@
+ID,  dbLong
+CrewNo,  dbText
+Role,  dbText
+CrewName,  dbText
+NoStation,  dbLong
+StationNo,  dbText
+StationName,  dbText
+TemplateDate,  dbText

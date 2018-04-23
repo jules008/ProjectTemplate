@@ -4,7 +4,7 @@ Attribute VB_Name = "ModErrorHandling"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 17 Jan 17
+' Date - 20 Apr 18
 '===============================================================
 
 Option Explicit
@@ -16,106 +16,147 @@ Private Const StrMODULE As String = "ModErrorHandling"
 ' Handles all system errors
 ' ---------------------------------------------------------------
 Public Function CentralErrorHandler( _
-            ByVal sModule As String, _
-            ByVal sProc As String, _
-            Optional ByVal sFile As String, _
-            Optional ByVal bEntryPoint As Boolean) As Boolean
+            ByVal ErrModule As String, _
+            ByVal ErrProc As String, _
+            Optional ByVal ErrFile As String, _
+            Optional ByVal EntryPoint As Boolean) As Boolean
 
-    Static sErrMsg As String
+    Static ErrMsg As String
     
     Dim iFile As Integer
-    Dim lErrNum As Long
-    Dim sFullSource As String
-    Dim sPath As String
-    Dim sLogText As String
-    Dim ErrMsgTxt As String
+    Dim ErrNum As Long
+    Dim ErrHeader As String
+    Dim LogText As String
     
-    ' Grab the error info before it's cleared by
-    ' On Error Resume Next below.
-    lErrNum = Err.Number
-    ' If this is a user cancel, set the silent error flag
-    ' message. This will cause the error to be ignored.
-'    If lErrNum = USER_CANCEL Then sErrMsg = SILENT_ERROR
-    ' If this is the originating error, the static error
-    ' message variable will be empty. In that case, store
-    ' the originating error message in the static variable.
-    If Len(sErrMsg) = 0 Then sErrMsg = Err.Description
+    ErrNum = Err.Number
+    ErrMsg = Err.Description
+    
+    If Len(ErrMsg) = 0 Then ErrMsg = Err.Description
                 
-
-    ' We cannot allow errors in the central error handler.
     On Error Resume Next
     
-    ' Load the default filename if required.
-    If Len(sFile) = 0 Then sFile = ThisWorkbook.Name
+    If Len(ErrFile) = 0 Then ErrFile = ThisWorkbook.Name
     
-    ' Get the application directory.
-    sPath = ThisWorkbook.Path
-    If Right$(sPath, 1) <> "\" Then sPath = sPath & "\"
+    If Right$(SYS_PATH, 1) <> "\" Then SYS_PATH = SYS_PATH & "\"
     
-    ' Construct the fully-qualified error source name.
-    sFullSource = "[" & sFile & "]" & sModule & "." & sProc
+    ErrHeader = "[" & Application.UserName & "]" & "[" & ErrFile & "]" & ErrModule & "." & ErrProc
 
-    ' Create the error text to be logged.
-    ErrMsgTxt = "Sorry, there has been an error.  An Error Log File has been created.  Would " _
-                & " like to email this for further investigation?"
-        
-    sLogText = "  " & sFullSource & ", Error " & _
-                        CStr(lErrNum) & ": " & sErrMsg
+    LogText = "  " & ErrHeader & ", Error " & CStr(ErrNum) & ": " & ErrMsg
     
-    ' Open the log file, write out the error information and
-    ' close the log file.
-    If OUTPUT_MODE = "Log" Then
-        Dim Response As Integer
+    If Not DEBUG_MODE Then
         
         iFile = FreeFile()
-        Open sPath & FILE_ERROR_LOG For Append As #iFile
-        Print #iFile, Format$(Now(), "mm/dd/yy hh:mm:ss"); sLogText
-        If bEntryPoint Then Print #iFile,
+        Open SYS_PATH & FILE_ERROR_LOG For Append As #iFile
+        Print #iFile, Format$(Now(), "mm/dd/yy hh:mm:ss"); LogText
+        If EntryPoint Then Print #iFile,
         Close #iFile
+    End If
                 
-    Else
-        Debug.Print Format$(Now(), "mm/dd/yy hh:mm:ss"); sLogText
-        If bEntryPoint Then Debug.Print
-    End If
+    Debug.Print Format$(Now(), "mm/dd/yy hh:mm:ss"); LogText
     
-    ' Do not display or debug silent errors.
-'    If sErrMsg <> SILENT_ERROR Then
-
-    ' Show the error message when we reach the entry point
-    ' procedure or immediately if we are in debug mode.
-    If bEntryPoint Or DEBUG_MODE Then
-        Application.ScreenUpdating = True
-        Response = MsgBox(ErrMsgTxt, vbYesNo, APP_NAME)
-    
-        If Response = 6 Then
-            With MailSystem
-                .MailItem.To = "Julian Turner"
-                .MailItem.Subject = "Debug Report - " & APP_NAME
-                .MailItem.Importance = olImportanceHigh
-                .MailItem.Attachments.Add sPath & FILE_ERROR_LOG
-                .MailItem.Body = "Please add any further information such " _
-                                   & "what you were doing at the time of the error" _
-                                   & ", and what candidate were you working on etc "
-                .DisplayEmail
-            End With
-        End If
+    If EntryPoint Then
+        Debug.Print
+        ModLibrary.PerfSettingsOff
         
-        ' Clear the static error message variable once
-        ' we've reached the entry point so that we're ready
-        ' to handle the next error.
-        sErrMsg = vbNullString
+        If Not DEV_MODE And SEND_ERR_MSG Then SendErrMessage
+            SendErrMessage
+        ErrMsg = vbNullString
     End If
     
-    ' The return vale is the debug mode status.
     CentralErrorHandler = DEBUG_MODE
     
-'    Else
-'        ' If this is a silent error, clear the static error
-'        ' message variable when we reach the entry point.
-'        If bEntryPoint Then sErrMsg = vbNullString
-'        CentralErrorHandler = False
-'    End If
-    
+    ModLibrary.PerfSettingsOff
 End Function
 
+' ===============================================================
+' CustomErrorHandler
+' Handles system custom errors 1000 - 1500
+' ---------------------------------------------------------------
+Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String) As Boolean
+    Dim MailSubject As String
+    Dim MailBody As String
+    
+    Const StrPROCEDURE As String = "CustomErrorHandler()"
 
+    On Error Resume Next
+
+    Select Case ErrorCode
+        Case UNKNOWN_USER
+            
+        Case NO_DATABASE_FOUND
+            FaultCount1008 = FaultCount1008 + 1
+            Debug.Print "Trying to connect to Database....Attempt " & FaultCount1008
+            
+            If FaultCount1008 <= 3 Then
+            
+                Application.DisplayStatusBar = True
+                Application.StatusBar = "Trying to connect to Database....Attempt " & FaultCount1008
+                Application.Wait (Now + TimeValue("0:00:02"))
+                Debug.Print FaultCount1008
+            Else
+                FaultCount1008 = 0
+                Application.StatusBar = "System Failed - No Database"
+                End
+            End If
+        
+        Case SYSTEM_RESTART
+            Debug.Print "system failed - restarting"
+            FaultCount1002 = FaultCount1002 + 1
+
+            If FaultCount1002 <= 3 Then
+                If Not Initialise Then Err.Raise HANDLED_ERROR
+                Application.DisplayStatusBar = True
+                Application.StatusBar = "System failed...Restarting Attempt " & FaultCount1002
+                Application.Wait (Now + TimeValue("0:00:02"))
+            Else
+                FaultCount1002 = 0
+                Application.StatusBar = "Sysetm Failed"
+                End
+            End If
+            
+        Case ACCESS_DENIED
+            MsgBox "Sorry you do not have the required Access Level.  " _
+                & "Please send a Support Mail if you require access", vbCritical, APP_NAME
+        
+        Case NO_INI_FILE
+            MsgBox "No INI file has been found, so system cannot continue. This can occur if the file " _
+                    & "is copied from its location on the T Drive.  Please delete file and create a shortcut instead", vbCritical, APP_NAME
+            Application.StatusBar = "System Failed - No INI File"
+            End
+        
+        Case DB_WRONG_VER
+            MsgBox "Incorrect Version Database - System cannot continue", vbCritical + vbOKOnly, APP_NAME
+            Application.StatusBar = "System Failed - Wrong DB Version"
+            End
+        
+    End Select
+    
+    Set MailSystem = Nothing
+
+    CustomErrorHandler = True
+End Function
+
+' ===============================================================
+' SendErrMessage
+' Sends an email log file
+' ---------------------------------------------------------------
+Private Sub SendErrMessage()
+    
+    On Error Resume Next
+    
+    If MailSystem Is Nothing Then Set MailSystem = New ClsMailSystem
+        
+    If Not ModLibrary.OutlookRunning Then
+        Shell "Outlook.exe"
+    End If
+
+    With MailSystem
+        .MailItem.To = "Julian Turner"
+        .MailItem.Subject = "Debug Report - " & APP_NAME
+        .MailItem.Importance = olImportanceHigh
+        .MailItem.Attachments.Add SYS_PATH & FILE_ERROR_LOG
+                           .SendEmail
+        If SEND_EMAILS Then .SendEmail Else .DisplayEmail
+    End With
+
+End Sub

@@ -1,0 +1,8 @@
+ID1,  dbLong
+CrewNo,  dbText
+StationNo,  dbLong
+Day,  dbDouble
+WeekDay,  dbDouble
+TimeSlot,  dbDouble
+OnCall,  dbBoolean
+ClosedDate,  dbDate

@@ -12,11 +12,29 @@ Option Explicit
 Private Const StrMODULE As String = "ModAPICalls"
 
 ' ===============================================================
+' ShellExecute
+' Executes shell commands
+' ---------------------------------------------------------------
+Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" ( _
+ByVal hwnd As Long, _
+ByVal lpOperation As String, _
+ByVal lpFile As String, _
+ByVal lpParameters As String, _
+ByVal lpDirectory As String, _
+ByVal nShowCmd As Long) As Long
+
+' ===============================================================
 ' CopyMemory
 ' Copies blocks of memory from one location to another
 ' ---------------------------------------------------------------
 Public Declare Sub CopyMemory _
 Lib "kernel32" Alias "RtlMoveMemory" (pDst As Any, pSrc As Any, ByVal ByteLen As Long)
+
+' ===============================================================
+' Sleep
+' Pauses execution for a defined number of milliseconds
+' ---------------------------------------------------------------
+Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
 
 ' ===============================================================
 ' GetScreenHeight

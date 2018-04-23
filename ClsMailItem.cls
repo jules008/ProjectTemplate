@@ -107,7 +107,7 @@ Public Sub LoadDB()
                                         " AND deleted IS NULL")
                                         
     With RstMailItems
-        If .recordcount > 0 Then
+        If .RecordCount > 0 Then
             If Not IsNull(!EmailNo) Then pEmailNo = !EmailNo
             If Not IsNull(!CrewNo) Then pCrewNo = !CrewNo
             If Not IsNull(!MailTo) Then pMailTo = !MailTo
@@ -151,7 +151,7 @@ Public Function UpdateDB() As Boolean
     
     
     With RstMailItems
-        If .recordcount = 0 Then
+        If .RecordCount = 0 Then
             UpdateDB = False
         Else
             .Edit
@@ -180,7 +180,7 @@ Public Sub DeleteDB()
                                         " AND deleted IS NULL")
         
     With RstMailItems
-        If .recordcount <> 0 Then
+        If .RecordCount <> 0 Then
             .Edit
             !Deleted = Now
             .Update

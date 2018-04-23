@@ -4,7 +4,7 @@ Attribute VB_Name = "ModCloseDown"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 17 Jan 17
+' Date - 19 Apr 18
 '===============================================================
 
 Option Explicit
@@ -13,7 +13,7 @@ Private Const StrMODULE As String = "ModCloseDown"
 
 ' ===============================================================
 ' Terminate
-' Functions for graceful close down of system
+' Closedown processing
 ' ---------------------------------------------------------------
 Public Function Terminate() As Boolean
     Const StrPROCEDURE As String = "Terminate()"
@@ -28,6 +28,9 @@ Exit Function
 
 ErrorExit:
 
+    ModDatabase.DBTerminate
+
+    
     Terminate = False
 
 Exit Function

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmDBClassGen 
    Caption         =   "UserForm1"
-   ClientHeight    =   11580
+   ClientHeight    =   6015
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   7890
+   ClientWidth     =   15270
    OleObjectBlob   =   "FrmDBClassGen.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,13 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'===============================================================
-' Form FrmDBClassGen
-'===============================================================
-' v1.0.0 - Initial Version
-'---------------------------------------------------------------
-' Date - 19 Apr 18
-'===============================================================
 
 
 Option Explicit
@@ -273,29 +266,29 @@ Private Sub BtnGenerateClass_Click()
             For i = 0 To .ListCount - 1
                 TmpVar = .List(i, VAR_NAME)
                 TmpType = .List(i, VAR_TYPE)
+                TmpPublic = .List(i, PRTE_OR_PUB)
+                TmpVar = .List(i, VAR_NAME)
+                TmpType = .List(i, VAR_TYPE)
+                
+                If .List(i, IS_PARENT) = True Then TmpParent = .List(i, IS_PARENT)
+                
                 If Left(TmpType, 3) = "Cls" Then IsClass = True Else IsClass = False
                 
                 If IsClass Then
                     Print #ClassFile, "    Set p" & TmpVar & " = New " & TmpType
+                    
+                    If TmpParent = True Then
+                        If TmpPublic = "Private" Then
+                            Print #ClassFile, "    p" & TmpVar & ".SetParent ObjPtr(Me)"
+                        Else
+                            Print #ClassFile, "    " & TmpVar & ".SetParent ObjPtr(Me)"
+                        End If
+                    End If
                 End If
             Next
             
             Print #ClassFile,
-            
-            For i = 0 To .ListCount - 1
-                TmpPublic = .List(i, PRTE_OR_PUB)
-                TmpVar = .List(i, VAR_NAME)
-                TmpType = .List(i, VAR_TYPE)
-                If .List(i, IS_PARENT) = True Then TmpParent = .List(i, IS_PARENT)
-                
-                If TmpParent = True Then
-                    If TmpPublic = "Private" Then
-                        Print #ClassFile, "    p" & TmpVar & ".SetParent ObjPtr(Me)"
-                    Else
-                        Print #ClassFile, "    " & TmpVar & ".SetParent ObjPtr(Me)"
-                    End If
-                End If
-            Next
+      
         End With
         
         Print #ClassFile, "End Sub"

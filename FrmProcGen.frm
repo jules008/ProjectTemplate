@@ -13,13 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'===============================================================
-' Form FrmProcGen
-'===============================================================
-' v1.0.0 - Initial Version
-'---------------------------------------------------------------
-' Date - 19 Apr 18
-'===============================================================
 
 Option Explicit
 Private Const NEWLINE = 13
@@ -133,6 +126,3 @@ Private Sub OptNonEntry_Click()
     OptFunction.Value = True
 End Sub
 
-Private Sub UserForm_Click()
-
-End Sub
