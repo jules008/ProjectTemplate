@@ -4,7 +4,7 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 19 Apr 18
+' Date - 23 Apr 18
 '===============================================================
 Private Const StrMODULE As String = "ModGlobals"
 
@@ -17,6 +17,7 @@ Public Const PROJECT_FILE_NAME As String = "Project Template"
 Public Const APP_NAME As String = "Project Template"
 Public Const EXPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Project Template\Library\Dev\"
 Public Const IMPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Project Template\Library\Dev\"
+Public Const LIBRARY_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Project Template\Library\"
 Public Const DB_FILE_NAME As String = "Project Template Blank DB"
 Public Const INI_FILE_PATH As String = "\System Files\"
 Public Const INI_FILE_NAME As String = "System.ini"

@@ -87,7 +87,7 @@ Private Sub BtnGenerateClass_Click()
     
     FileName = "Cls" & TxtObjectName & " v0,0.cls"
     
-    Open ShtSettings.Range("FPath") & FileName For Output As #ClassFile
+    Open LIBRARY_FILE_PATH & FileName For Output As #ClassFile
     
     'Write header information
     Print #ClassFile, "VERSION 1.0 CLASS"

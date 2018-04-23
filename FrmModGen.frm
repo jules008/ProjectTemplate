@@ -26,7 +26,7 @@ Private Sub BtnGen_Click()
     
     FileName = "Mod" & TxtModName & " v0,0.bas"
     
-    Open ShtSettings.Range("FPath") & FileName For Output As #ModFile
+    Open LIBRARY_FILE_PATH & FileName For Output As #ModFile
     
     'Write header information
     Print #ModFile, "Attribute VB_Name = """ & "Mod" & TxtModName & """"
