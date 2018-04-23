@@ -1,7 +1,0 @@
-ID,  dbLong
-tid,  dbLong
-TimeSlot,  dbLong
-CrewNo,  dbLong
-StationNo,  dbLong
-Code,  dbText
-BookedHrs,  dbLong

@@ -24,14 +24,14 @@ Public Function CourseAccessCheck(CourseNo As String) As Boolean
 
     On Error GoTo ErrorHandler
 
-    StrUsername = "'" & Application.Username & "'"
+    StrUsername = "'" & Application.UserName & "'"
     StrCourseNo = "'" & CourseNo & "'"
     
     Set RstUserList = ModDatabase.SQLQuery("SELECT * FROM useraccess WHERE " & _
                             " CourseNo = " & StrCourseNo & _
                             " AND username = " & StrUsername)
     
-    If RstUserList.recordcount = 0 Then
+    If RstUserList.RecordCount = 0 Then
         CourseAccessCheck = False
     Else
         CourseAccessCheck = True
@@ -62,7 +62,7 @@ End Function
 ' RemoveUser
 ' Removes user from access list for course
 ' ---------------------------------------------------------------
-Private Function RemoveUser(Username As String) As Boolean
+Private Function RemoveUser(UserName As String) As Boolean
     Dim StrUsername As String
     Dim StrCourseNo As String
     Dim CourseNo As String
@@ -73,7 +73,7 @@ Private Function RemoveUser(Username As String) As Boolean
 
     On Error GoTo ErrorHandler
 
-    StrUsername = "'" & Username & "'"
+    StrUsername = "'" & UserName & "'"
     
     If ModDatabase.DB Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
@@ -100,7 +100,7 @@ Private Function RemoveUser(Username As String) As Boolean
     
     With RstCourseUserLst
         If Not RstCourseUserLst Is Nothing Then
-            If .recordcount > 0 Then
+            If .RecordCount > 0 Then
                 Do While Not .EOF
                     .Delete
                     .MoveNext
@@ -110,7 +110,7 @@ Private Function RemoveUser(Username As String) As Boolean
     End With
         
     With RstUserList
-        If .recordcount > 0 Then
+        If .RecordCount > 0 Then
             Do While Not .EOF
                 .Delete
                 .MoveNext
@@ -159,14 +159,14 @@ Private Function IsAdmin() As Boolean
         If Not Initialise Then Err.Raise HANDLED_ERROR
     End If
     
-    StrUsername = "'" & Application.Username & "'"
+    StrUsername = "'" & Application.UserName & "'"
     
     Set RstUserList = ModDatabase.SQLQuery("SELECT * FROM userlist WHERE " & _
                             " username = " & StrUsername _
                             & "AND admin = TRUE")
     
     With RstUserList
-        If .recordcount > 0 Then
+        If .RecordCount > 0 Then
             IsAdmin = True
         Else
             IsAdmin = False
@@ -219,7 +219,7 @@ Private Function GetAccessList() As Recordset
                                 " CourseNo = " & StrCourseNo)
     End If
     
-    If RstUserList.recordcount <> 0 Then
+    If RstUserList.RecordCount <> 0 Then
         Set GetAccessList = RstUserList
     End If
     
