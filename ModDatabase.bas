@@ -380,7 +380,7 @@ Public Sub UpdateSysMsg()
     
     With RstMessage
         If .RecordCount = 0 Then
-            .addnew
+            .AddNew
         Else
             .Edit
         End If

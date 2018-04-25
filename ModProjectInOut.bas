@@ -404,3 +404,13 @@ Public Function ModuleExists(ModuleName As String) As Boolean
         If CodeModule.Name = ModuleName Then ModuleExists = True
     Next
 End Function
+
+' ===============================================================
+' ImportModule
+' Imports a sinlge VBA Modules from dev library
+' ---------------------------------------------------------------
+Public Sub ImportModule(ModuleName As String)
+    ThisWorkbook.VBProject.VBComponents.Import LIBRARY_FILE_PATH & ModuleName
+End Sub
+
+

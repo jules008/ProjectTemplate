@@ -130,7 +130,7 @@ Public Function NewDB() As Integer
     Set RstMailItems = ModDatabase.SQLQuery("mailitems")
         
     With RstMailItems
-        .addnew
+        .AddNew
         NewDB = !EmailNo
         !CrewNo = pCrewNo
         .Update

@@ -42,5 +42,8 @@ Private Sub BtnGen_Click()
     Print #ModFile, "Private Const StrMODULE As String = """ & "Mod" & TxtModName & """"
     Print #ModFile,
     Close #ModFile
+    
+    ModProjectInOut.ImportModule FileName
     Hide
 End Sub
+

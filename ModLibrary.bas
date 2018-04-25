@@ -263,11 +263,11 @@ End Function
 ' Prints any document
 ' ---------------------------------------------------------------
 Public Function PrintDoc(FileName As String)
-    Dim X As Long
+    Dim x As Long
     
     On Error Resume Next
     
-    X = ShellExecute(0, "Print", FileName, 0&, 0&, 3)
+    x = ShellExecute(0, "Print", FileName, 0&, 0&, 3)
 
 End Function
 
@@ -276,11 +276,11 @@ End Function
 ' Opens any document
 ' ---------------------------------------------------------------
 Public Function OpenDoc(FileName As String)
-    Dim X As Long
+    Dim x As Long
     
 '    On Error Resume Next
     
-    X = ShellExecute(0, "Open", FileName, "", "", vbNormalNoFocus)
+    x = ShellExecute(0, "Open", FileName, "", "", vbNormalNoFocus)
 
 End Function
 
@@ -317,7 +317,7 @@ Function JoinRecordsets(ByVal Rst1 As Recordset, Rst2 As Recordset) As Recordset
     With Rst2
         .MoveFirst
         Do While Not .EOF
-            Rst1.addnew
+            Rst1.AddNew
             
             For i = 0 To .Fields.Count - 1
                 Rst1.Fields(i) = Rst2.Fields(i)

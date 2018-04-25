@@ -49,10 +49,10 @@ Public Function GetScreenHeight() As Integer
 
     On Error GoTo ErrorHandler
 
-    Dim X  As Long
+    Dim x  As Long
     Dim y  As Long
    
-    X = GetSystemMetrics(SM_CXSCREEN)
+    x = GetSystemMetrics(SM_CXSCREEN)
     y = GetSystemMetrics(SM_CYSCREEN)
 
     GetScreenHeight = y

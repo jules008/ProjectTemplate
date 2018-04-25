@@ -91,7 +91,7 @@ Private Sub BtnPaste_Click()
     Txt = Txt & "ErrorExit:"
     Txt = Txt & Chr(NEWLINE)
     Txt = Txt & Chr(NEWLINE)
-    Txt = Txt & Chr(INTAB) & "***CleanUpCode***"
+    Txt = Txt & Chr(INTAB) & "'***CleanUpCode***"
     Txt = Txt & Chr(NEWLINE)
     If OptNonEntry Then Txt = Txt & Chr(INTAB) & TxtProcName & " = False" & Chr(NEWLINE)
     Txt = Txt & Chr(NEWLINE)
@@ -100,8 +100,13 @@ Private Sub BtnPaste_Click()
     Txt = Txt & Chr(NEWLINE)
     Txt = Txt & Chr(NEWLINE)
     Txt = Txt & "ErrorHandler:"
-    If OptEntryPoint Then Txt = Txt & Chr(INTAB) & "If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then"
-    If OptNonEntry Then Txt = Txt & Chr(INTAB) & "If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then"
+    Txt = Txt & Chr(NEWLINE)
+    If OptEntryPoint Then
+        Txt = Txt & Chr(INTAB) & "If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then"
+    End If
+    If OptNonEntry Then
+        Txt = Txt & Chr(INTAB) & "If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then"
+    End If
     Txt = Txt & Chr(NEWLINE)
     Txt = Txt & Chr(INTAB) & Chr(INTAB) & "Stop"
     Txt = Txt & Chr(NEWLINE)
@@ -118,7 +123,7 @@ Private Sub BtnPaste_Click()
     
     obj.SetText Txt
     obj.PutInClipboard
-    Hide
+    
 End Sub
 
 Private Sub OptNonEntry_Click()

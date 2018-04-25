@@ -590,7 +590,7 @@ End Sub
 
 Private Function GetMethodScript(i As Integer, PrimaryKey As String) As String
     Dim Txt As String
-    Dim X As Integer
+    Dim x As Integer
     
     Dim RecSet As String
     Dim TmpVarName As String
@@ -607,18 +607,18 @@ Private Function GetMethodScript(i As Integer, PrimaryKey As String) As String
             & Chr(13) & "        if .Recordcount > 0 Then"
             
             With LstVariables
-                For X = 0 To .ListCount - 1
-                    TmpVarName = .List(X, VAR_NAME)
-                    TmpVarType = .List(X, VAR_TYPE)
+                For x = 0 To .ListCount - 1
+                    TmpVarName = .List(x, VAR_NAME)
+                    TmpVarType = .List(x, VAR_TYPE)
                            
                     Txt = Txt & Chr(13) & "            If Not IsNull(!" & TmpVarName & ") Then p" & TmpVarName & " = !" & TmpVarName
                 Next
                 
                 Txt = Txt & Chr(13)
 
-                For X = 0 To .ListCount - 1
-                    TmpVarName = .List(X, VAR_NAME)
-                    TmpVarType = .List(X, VAR_TYPE)
+                For x = 0 To .ListCount - 1
+                    TmpVarName = .List(x, VAR_NAME)
+                    TmpVarType = .List(x, VAR_TYPE)
                     
                     If Left(TmpVarType, 3) = "Cls" Then
                         If Right(TmpVarType, 1) = "s" Then
@@ -660,9 +660,9 @@ Private Function GetMethodScript(i As Integer, PrimaryKey As String) As String
             & Chr(13) & "        end if"
             
             With LstVariables
-                For X = 1 To .ListCount - 1
-                    TmpVarName = .List(X, VAR_NAME)
-                    TmpVarType = .List(X, VAR_TYPE)
+                For x = 1 To .ListCount - 1
+                    TmpVarName = .List(x, VAR_NAME)
+                    TmpVarType = .List(x, VAR_TYPE)
                            
                     Txt = Txt & Chr(13) & "        !" & TmpVarName & " = p" & TmpVarName
                 Next

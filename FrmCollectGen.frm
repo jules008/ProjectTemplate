@@ -444,7 +444,7 @@ End Sub
 Private Function GetMethodScript(i As Integer) As String
     Dim Txt As String
     Dim CollectionType As String
-    Dim X As Integer
+    Dim x As Integer
     
     CollectionType = Left(TxtObjectName, Len(TxtObjectName) - 1)
         
