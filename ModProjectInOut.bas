@@ -59,6 +59,7 @@ Public Sub ExportModules()
     Application.DisplayAlerts = True
     
     MsgBox "Export is ready", vbInformation, APP_NAME
+    Set SourceBook = Nothing
 End Sub
 
 ' ===============================================================
@@ -124,7 +125,7 @@ Public Sub RemoveAllModules()
     Next VBModule
     
     Set DlgOpen = Nothing
-
+    Set SourceBook = Nothing
 End Sub
 
 ' ===============================================================

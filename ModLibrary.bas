@@ -168,6 +168,26 @@ Public Sub ColourConvert()
 End Sub
 
 ' ===============================================================
+' FormatControls
+' Formats all controls on a form
+' ---------------------------------------------------------------
+
+Public Sub FormatControls(Form As UserForm)
+    Dim Cntrl As Control
+    
+    For Each Cntrl In Form
+        With Cntrl
+            If Left(.Name, 3) = "Btn" Then
+'                .textframe.
+            End If
+        End With
+        
+    
+    Next
+    
+End Sub
+
+' ===============================================================
 ' AddCheckBoxes
 ' Adds checkboxes to selected cells
 ' ---------------------------------------------------------------

@@ -66,7 +66,7 @@ End Sub
 Public Sub SendEmail()
    On Error Resume Next
     With pMailItem
-        .Send
+        If SEND_EMAILS Then .SendEmail
     End With
     On Error GoTo 0
 End Sub
@@ -84,8 +84,6 @@ Private Function ReturnMailItem()
         .Subject = pMailItem.Subject
         .timeSent = pMailItem.ReceivedTime
         .MailFrom = Environ("Username")
-        .EmailNo = .NewDB
-        .UpdateDB
     End With
 End Function
 
@@ -101,7 +99,7 @@ End Sub
 
 '===============================================================
 Private Sub Class_Initialize()
-    Set pOutlookApp = New Outlook.Application
+    Set pOutlookApp = CreateObject("Outlook.Application")
     Set pMailItem = pOutlookApp.CreateItem(0)
     Set pReturnMail = New ClsMailItem
 End Sub

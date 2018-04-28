@@ -59,7 +59,6 @@ Public Function CentralErrorHandler( _
         ModLibrary.PerfSettingsOff
         
         If Not DEV_MODE And SEND_ERR_MSG Then SendErrMessage
-            SendErrMessage
         ErrMsg = vbNullString
     End If
     
