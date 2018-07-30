@@ -21,7 +21,7 @@ Public Function Initialise() As Boolean
     On Error GoTo ErrorHandler
 
     Terminate
-
+    
     SYS_PATH = ThisWorkbook.Path & INI_FILE_PATH
 
     Application.StatusBar = "Reading INI File....."
@@ -162,6 +162,12 @@ Private Function ReadINIFile() As Boolean
     ENABLE_PRINT = CBool(EnablePrint)
     DB_PATH = DBPath
     DEV_MODE = CBool(DevMode)
+    
+    Debug.Print "Debug Mode: " & DebugMode
+    Debug.Print "Send Emails: " & SendEmails
+    Debug.Print "Enable Print: " & EnablePrint
+    Debug.Print "DB Path: " & DBPath
+    Debug.Print "Dev Mode: " & DevMode
     
     If STOP_FLAG = True Then Stop
     
