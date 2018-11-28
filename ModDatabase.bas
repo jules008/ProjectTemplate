@@ -77,7 +77,9 @@ Public Function DBConnect() As Boolean
     Const StrPROCEDURE As String = "DBConnect()"
 
     On Error GoTo ErrorHandler
-
+        
+    Debug.Print "Connect to DB: " & DB_PATH & DB_FILE_NAME
+    
     Set DB = OpenDatabase(DB_PATH & DB_FILE_NAME)
   
     DBConnect = True

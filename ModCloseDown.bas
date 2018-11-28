@@ -22,6 +22,8 @@ Public Function Terminate() As Boolean
 
     ModDatabase.DBTerminate
     
+    If Not EndGlobalClasses Then Err.Raise HANDLED_ERROR
+
     Terminate = True
 
 Exit Function
@@ -36,6 +38,37 @@ ErrorExit:
 Exit Function
 
 ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' EndGlobalClasses
+' initialises or terminates all global classes
+' ---------------------------------------------------------------
+Private Function EndGlobalClasses() As Boolean
+    Const StrPROCEDURE As String = "EndGlobalClasses()"
+
+    On Error GoTo ErrorHandler
+
+    Set CurrentUser = Nothing
+    
+    EndGlobalClasses = True
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    EndGlobalClasses = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop
         Resume
     Else

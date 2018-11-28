@@ -62,7 +62,7 @@ Public Function CentralErrorHandler( _
         ErrMsg = vbNullString
     End If
     
-    CentralErrorHandler = DEBUG_MODE
+    CentralErrorHandler = DEV_MODE
     
     ModLibrary.PerfSettingsOff
 End Function
@@ -114,8 +114,14 @@ Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String
             End If
             
         Case ACCESS_DENIED
-            MsgBox "Sorry you do not have the required Access Level.  " _
-                & "Please send a Support Mail if you require access", vbCritical, APP_NAME
+            MsgBox "Sorry, you do not have the required Access.  " _
+                & "Please contact SM Andy Dixon if you require access", vbCritical, APP_NAME
+            
+            If Not DEV_MODE Then
+                Application.DisplayAlerts = False
+                Application.Quit
+            End If
+            
         
         Case NO_INI_FILE
             MsgBox "No INI file has been found, so system cannot continue. This can occur if the file " _
@@ -127,6 +133,12 @@ Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String
             MsgBox "Incorrect Version Database - System cannot continue", vbCritical + vbOKOnly, APP_NAME
             Application.StatusBar = "System Failed - Wrong DB Version"
             End
+        
+        Case FORM_INPUT_EMPTY
+           MsgBox "Please complete all highlighted fields", vbExclamation, APP_NAME
+       
+        Case NO_USER_SELECTED
+            MsgBox "please select a Person", vbExclamation, APP_NAME
         
     End Select
     

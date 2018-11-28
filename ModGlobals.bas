@@ -13,14 +13,14 @@ Option Explicit
 ' ===============================================================
 ' Global Constants
 ' ---------------------------------------------------------------
-Public Const PROJECT_FILE_NAME As String = "Project Template"
-Public Const APP_NAME As String = "Project Template"
-Public Const EXPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Project Template\Library\Dev\"
-Public Const IMPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Project Template\Library\Dev\"
-Public Const LIBRARY_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Project Template\Library\"
-Public Const DB_FILE_NAME As String = "Project Template Blank DB"
+Public Const PROJECT_FILE_NAME As String = "RDS Agreement Manager"
+Public Const APP_NAME As String = "RDS Agreement Manager"
+Public Const EXPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\AA Manager\Dev Environment\Library\"
+Public Const IMPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\AA Manager\Dev Environment\Library\"
+Public Const LIBRARY_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\AA Manager\Dev Environment\Library\"
 Public Const INI_FILE_PATH As String = "\System Files\"
 Public Const INI_FILE_NAME As String = "System.ini"
+Public Const PROTECT_ON As Boolean = True
 Public Const STOP_FLAG As Boolean = False
 Public Const MAINT_MSG As String = ""
 Public Const SEND_ERR_MSG As Boolean = False
@@ -41,6 +41,8 @@ Public Const ACCESS_DENIED As Long = 1003
 Public Const NO_INI_FILE As Long = 1004
 Public Const DB_WRONG_VER As Long = 1005
 Public Const GENERIC_ERROR As Long = 1006
+Public Const FORM_INPUT_EMPTY As Long = 1007
+Public Const NO_USER_SELECTED As Long = 1008
 
 ' ===============================================================
 ' Error Variables

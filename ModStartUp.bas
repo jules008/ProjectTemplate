@@ -16,13 +16,14 @@ Private Const StrMODULE As String = "ModStartUp"
 ' Creates the environment for system start up
 ' ---------------------------------------------------------------
 Public Function Initialise() As Boolean
+    Dim UserName As String
+    Dim Response As String
+    
     Const StrPROCEDURE As String = "Initialise()"
 
     On Error GoTo ErrorHandler
 
     Terminate
-    
-    SYS_PATH = ThisWorkbook.Path & INI_FILE_PATH
 
     Application.StatusBar = "Reading INI File....."
     
@@ -35,15 +36,29 @@ Public Function Initialise() As Boolean
     Application.StatusBar = "Checking DB Version....."
     
     If ModDatabase.GetDBVer <> DB_VER Then Err.Raise DB_WRONG_VER
-    
+           
     Application.StatusBar = "Finding User....."
-    'get username of current user
-    If Not ModStartUp.GetUserName Then Err.Raise HANDLED_ERROR
     
-    'Show any messages
+    If Not SetGlobalClasses Then Err.Raise HANDLED_ERROR
+
+    If DEV_MODE Then
+        Response = MsgBox("TEST USE ONLY - Do you want to log on as a test user?", vbYesNo + vbInformation, APP_NAME)
+        If Response = 6 Then
+            UserName = Application.InputBox("Please enter name of test user would like to log on with", APP_NAME)
+        Else
+            UserName = GetUserName
+        End If
+    Else
+        UserName = GetUserName
+    End If
+    
+    If UserName = "Error" Then Err.Raise HANDLED_ERROR
+    
+    If Not LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
+    
     If Not MessageCheck Then Err.Raise HANDLED_ERROR
     
-
+    If Not ShtFrontPage.Initialise Then Err.Raise HANDLED_ERROR
 
     Initialise = True
 
@@ -74,7 +89,7 @@ End Function
 ' GetUserName
 ' gets username from windows, or test user if in test mode
 ' ---------------------------------------------------------------
-Public Function GetUserName() As Boolean
+Public Function GetUserName() As String
     Dim UserName As String
     Dim CharPos As Integer
     
@@ -85,28 +100,27 @@ Public Function GetUserName() As Boolean
     If Not UpdateUsername Then Err.Raise HANDLED_ERROR
     
     If DEV_MODE Then
-'       If ShtSettings.Range("C15") = True Then
-'            UserName = ShtSettings.Range("Test_User")
-'        Else
+       If ShtSettings.Range("M8") = True Then
+            UserName = ShtSettings.Range("Test_User")
+        Else
         UserName = "Julian Turner"
-'        End If
+        End If
     Else
         UserName = Application.UserName
     End If
     
-    If UserName = "" Then Err.Raise HANDLED_ERROR, , "No Username"
+    If UserName = "" Then Err.Raise UNKNOWN_USER
 
-    UserName = Replace(UserName, "'", "")
+    GetUserName = Replace(UserName, "'", "")
+    Debug.Print UserName
     
 GracefulExit:
     
-    GetUserName = True
-
 Exit Function
 
 ErrorExit:
 
-    GetUserName = False
+    GetUserName = "Error"
 
 Exit Function
 
@@ -129,20 +143,23 @@ End Function
 ' ReadINIFile
 ' Gets start up variables from ini file
 ' ---------------------------------------------------------------
-Private Function ReadINIFile() As Boolean
+Public Function ReadINIFile() As Boolean
     Dim DebugMode As String
     Dim EnablePrint As String
     Dim DBPath As String
     Dim SendEmails As String
     Dim DevMode As String
     Dim INIFile As Integer
+    Dim DBFileName As String
     
     Const StrPROCEDURE As String = "ReadINIFile()"
 
     On Error GoTo ErrorHandler
        
     INIFile = FreeFile()
-       
+    
+    SYS_PATH = ThisWorkbook.Path & INI_FILE_PATH
+
     Debug.Print SYS_PATH & INI_FILE_NAME
     
     If Dir(SYS_PATH & INI_FILE_NAME) = "" Then Err.Raise NO_INI_FILE
@@ -153,6 +170,7 @@ Private Function ReadINIFile() As Boolean
     Line Input #INIFile, SendEmails
     Line Input #INIFile, EnablePrint
     Line Input #INIFile, DBPath
+    Line Input #INIFile, DBFileName
     Line Input #INIFile, DevMode
     
     Close #INIFile
@@ -161,13 +179,8 @@ Private Function ReadINIFile() As Boolean
     SEND_EMAILS = CBool(SendEmails)
     ENABLE_PRINT = CBool(EnablePrint)
     DB_PATH = DBPath
+    DB_FILE_NAME = DBFileName
     DEV_MODE = CBool(DevMode)
-    
-    Debug.Print "Debug Mode: " & DebugMode
-    Debug.Print "Send Emails: " & SendEmails
-    Debug.Print "Enable Print: " & EnablePrint
-    Debug.Print "DB Path: " & DBPath
-    Debug.Print "Dev Mode: " & DevMode
     
     If STOP_FLAG = True Then Stop
     
@@ -284,6 +297,83 @@ ErrorExit:
 Exit Function
 
 ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' LogUserOn
+' Logs on user and assigns access level.  Terminates if user is not known
+' ---------------------------------------------------------------
+Private Function LogUserOn(UserName As String) As Boolean
+    Const StrPROCEDURE As String = "LogUserOn()"
+
+    On Error GoTo ErrorHandler
+
+    If UserName = "" Then Err.Raise HANDLED_ERROR, , "Username blank"
+    
+    CurrentUser.DBGet UserName
+    
+    Debug.Print CurrentUser.UserName & " Logged on"
+    
+    If CurrentUser.UserName = "" Then Err.Raise ACCESS_DENIED
+    
+GracefulExit:
+
+    LogUserOn = True
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    LogUserOn = False
+
+Exit Function
+
+ErrorHandler:
+    
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        CustomErrorHandler Err.Number
+        Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' SetGlobalClasses
+' initialises or terminates all global classes
+' ---------------------------------------------------------------
+Private Function SetGlobalClasses() As Boolean
+    Const StrPROCEDURE As String = "SetGlobalClasses()"
+
+    On Error GoTo ErrorHandler
+
+    Set CurrentUser = New ClsPerson
+    
+    SetGlobalClasses = True
+
+
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    SetGlobalClasses = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop
         Resume
     Else
