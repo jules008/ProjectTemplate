@@ -159,9 +159,9 @@ End Sub
 ' Converts RGB colour to long
 ' ---------------------------------------------------------------
 
-Public Sub ColourConvert()
+Public Sub ColourConvert(R As Integer, G As Integer, B As Integer)
      Dim Colour1 As Long
-     Colour1 = RGB(237, 12, 63)
+     Colour1 = RGB(R, G, B)
      
      Debug.Print Colour1
 
@@ -233,8 +233,7 @@ Function IsProcessRunning(process As String) As Boolean
     Else
         IsProcessRunning = False
     End If
-    
-    Set objList = Nothing
+
 End Function
 
 ' ===============================================================
@@ -253,7 +252,6 @@ Function OutlookRunning() As Boolean
     Else
         OutlookRunning = True
     End If
-    Set oOutlook = Nothing
 End Function
 
 ' ===============================================================
