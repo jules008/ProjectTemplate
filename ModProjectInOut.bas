@@ -141,7 +141,7 @@ Public Sub ExportDBTables()
     
     On Error Resume Next
     
-    If DB Is Nothing Then Initialise
+    Set DB = OpenDatabase("G:\Development Areas\CDC Tracker\System Files\TrainingDB.accdb")
     
     For Each TableExport In DB.TableDefs
         If Not (TableExport.Name Like "MSys*" Or TableExport.Name Like "~*") Then
@@ -411,7 +411,7 @@ End Function
 ' Imports a sinlge VBA Modules from dev library
 ' ---------------------------------------------------------------
 Public Sub ImportModule(ModuleName As String)
-    ThisWorkbook.VBProject.VBComponents.Import LIBRARY_FILE_PATH & ModuleName
+    ThisWorkbook.VBProject.VBComponents.Import IMPORT_FILE_PATH & ModuleName
 End Sub
 
 

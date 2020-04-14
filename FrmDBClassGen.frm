@@ -16,6 +16,9 @@ Attribute VB_Exposed = False
 
 
 Option Explicit
+Public DB As DAO.Database
+Const DB_PATH As String = "G:\Development Areas\CDC Tracker\System Files\"
+Const DB_FILE_NAME As String = "TrainingDB.accdb"
 Const PRTE_OR_PUB As Integer = 0
 Const VAR_NAME As Integer = 1
 Const VAR_TYPE As Integer = 2
@@ -91,7 +94,7 @@ Private Sub BtnGenerateClass_Click()
     
     FileName = "Cls" & TxtObjectName & " v0,0.cls"
     
-    Open LIBRARY_FILE_PATH & FileName For Output As #ClassFile
+    Open IMPORT_FILE_PATH & FileName For Output As #ClassFile
     
     'Write header information
     Print #ClassFile, "VERSION 1.0 CLASS"
@@ -348,7 +351,7 @@ Private Sub BtnGenerateDBTable_Click()
     
     Dim Fld As DAO.Field
     
-    Initialise
+    Set DB = OpenDatabase(DB_PATH & DB_FILE_NAME)
     
     Set TableDef = DB.CreateTableDef("Tbl" & TxtObjectName)
     
@@ -519,6 +522,7 @@ Private Sub BtnGenerateForm_Click()
 End Sub
 
 Private Sub UserForm_Activate()
+    
     With CmoPrivateOrPublic
         .Clear
         .AddItem "Private"

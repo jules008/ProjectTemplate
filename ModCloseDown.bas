@@ -1,10 +1,11 @@
 Attribute VB_Name = "ModCloseDown"
 '===============================================================
 ' Module ModCloseDown
-'===============================================================
-' v1.0.0 - Initial Version
+' v0,0 - Initial Version
+' v0,1 - Delete menu item no on close down
+' v0,2 - Made Terminate a function and added Log Off
 '---------------------------------------------------------------
-' Date - 19 Apr 18
+' Date - 14 Nov 17
 '===============================================================
 
 Option Explicit
@@ -16,13 +17,50 @@ Private Const StrMODULE As String = "ModCloseDown"
 ' Closedown processing
 ' ---------------------------------------------------------------
 Public Function Terminate() As Boolean
+    Dim Frame As ClsUIFrame
+    Dim DashObj As ClsUIDashObj
+    Dim MenuItem As ClsUIMenuItem
+    
     Const StrPROCEDURE As String = "Terminate()"
 
-    On Error GoTo ErrorHandler
-
-    ModDatabase.DBTerminate
+    On Error Resume Next
+        
+    ShtMain.Unprotect
     
-    If Not EndGlobalClasses Then Err.Raise HANDLED_ERROR
+    CurrentUser.LogUserOff
+    
+    For Each Frame In MainScreen.Frames
+        'debug.print Frame.Name
+        For Each DashObj In Frame.DashObs
+            'debug.print DashObj.Name
+            DashObj.ShpDashObj.Delete
+            Set DashObj = Nothing
+        Next
+        
+        For Each MenuItem In Frame.Menu
+            'debug.print MenuItem.Name
+            MenuItem.ShpMenuItem.Delete
+            MenuItem.Icon.Delete
+            Set MenuItem = Nothing
+        Next
+        
+        [menuitemno] = ""
+        
+        Frame.Header.Icon.Delete
+        Frame.Header.ShpHeader.Delete
+        Set Frame.Header = Nothing
+        
+        Frame.ShpFrame.Delete
+        Set Frame = Nothing
+        
+    Next
+    
+    Set MainScreen = Nothing
+    
+    If Not CurrentUser Is Nothing Then Set CurrentUser = Nothing
+    
+    ModDatabase.DBTerminate
+    DeleteAllShapes
 
     Terminate = True
 
@@ -30,8 +68,10 @@ Exit Function
 
 ErrorExit:
 
-    ModDatabase.DBTerminate
+    If Not CurrentUser Is Nothing Then Set CurrentUser = Nothing
 
+    ModDatabase.DBTerminate
+    DeleteAllShapes
     
     Terminate = False
 
@@ -46,33 +86,24 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
 End Function
 
 ' ===============================================================
-' EndGlobalClasses
-' initialises or terminates all global classes
+' DeleteAllShapes
+' Deletes all shapes on screen except templates
 ' ---------------------------------------------------------------
-Private Function EndGlobalClasses() As Boolean
-    Const StrPROCEDURE As String = "EndGlobalClasses()"
-
-    On Error GoTo ErrorHandler
-
-    Set CurrentUser = Nothing
+Private Sub DeleteAllShapes()
+    Dim i As Integer
     
-    EndGlobalClasses = True
+    Const StrPROCEDURE As String = "DeleteAllShapes()"
 
-Exit Function
+    On Error Resume Next
 
-ErrorExit:
+    Dim Shp As Shape
+    
+    For i = ShtMain.Shapes.Count To 1 Step -1
+    
+        Set Shp = ShtMain.Shapes(i)
+        'debug.print i & "/" & ShtMain.Shapes.Count & " " & Shp.Name
+        
+        If Left(Shp.Name, 8) <> "TEMPLATE" Then Shp.Delete
+    Next
 
-    '***CleanUpCode***
-    EndGlobalClasses = False
-
-Exit Function
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
-
+End Sub

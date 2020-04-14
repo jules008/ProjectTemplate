@@ -36,30 +36,38 @@ Public Function Initialise() As Boolean
     Application.StatusBar = "Checking DB Version....."
     
     If ModDatabase.GetDBVer <> DB_VER Then Err.Raise DB_WRONG_VER
-           
-    Application.StatusBar = "Finding User....."
     
     If Not SetGlobalClasses Then Err.Raise HANDLED_ERROR
+    
+    Application.StatusBar = "Finding User....."
 
-    If DEV_MODE Then
-        Response = MsgBox("TEST USE ONLY - Do you want to log on as a test user?", vbYesNo + vbInformation, APP_NAME)
-        If Response = 6 Then
-            UserName = Application.InputBox("Please enter name of test user would like to log on with", APP_NAME)
-        Else
-            UserName = GetUserName
-        End If
-    Else
-        UserName = GetUserName
-    End If
+    UserName = GetUserName
     
     If UserName = "Error" Then Err.Raise HANDLED_ERROR
     
-    If Not LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
+    If Not ModSecurity.LogUserOn(UserName) Then Err.Raise HANDLED_ERROR
     
-    If Not MessageCheck Then Err.Raise HANDLED_ERROR
+'    If Not MessageCheck Then Err.Raise HANDLED_ERROR
     
-    If Not ShtFrontPage.Initialise Then Err.Raise HANDLED_ERROR
-
+    'If Not ShtFrontPage.Initialise Then Err.Raise HANDLED_ERROR
+    Application.StatusBar = "Buidling UI....."
+    
+    'build styles
+    If Not ModUIMenu.BuildStylesMenu Then Err.Raise HANDLED_ERROR
+    If Not ModUIMainScreen.BuildStylesMainScreen Then Err.Raise HANDLED_ERROR
+    
+    'Build menu and backdrop
+    If Not ModUIMenu.BuildMenu Then Err.Raise HANDLED_ERROR
+    
+    If [menuitemno] = "" Then
+        If MenuItem = 0 Then
+            ModUIMenu.ProcessBtnPress (1)
+        Else
+            ModUIMenu.ProcessBtnPress (MenuItem)
+        End If
+    Else
+        ModUIMenu.ProcessBtnPress ([menuitemno])
+    End If
     Initialise = True
 
 Exit Function
@@ -99,19 +107,12 @@ Public Function GetUserName() As String
     
     If Not UpdateUsername Then Err.Raise HANDLED_ERROR
     
-    If DEV_MODE Then
-       If ShtSettings.Range("M8") = True Then
-            UserName = ShtSettings.Range("Test_User")
-        Else
-        UserName = "Julian Turner"
-        End If
-    Else
-        UserName = Application.UserName
-    End If
+    UserName = Application.UserName
     
     If UserName = "" Then Err.Raise UNKNOWN_USER
 
     GetUserName = Replace(UserName, "'", "")
+    
     Debug.Print UserName
     
 GracefulExit:
@@ -278,12 +279,6 @@ Private Function UpdateUsername() As Boolean
     Const StrPROCEDURE As String = "UpdateUsername()"
 
     On Error GoTo ErrorHandler
-
-    If Application.UserName = "PaulJ Wright" Then Application.UserName = "Paul Wright"
-    
-    If Application.UserName = "Ian Taylor (LRF)" Then Application.UserName = "Ian Taylor (LFR)"
-
-    If Application.UserName = "#" Then Application.UserName = "Samuel Hayward"
     
     UpdateUsername = True
 
@@ -304,50 +299,6 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
     End If
 End Function
 
-' ===============================================================
-' LogUserOn
-' Logs on user and assigns access level.  Terminates if user is not known
-' ---------------------------------------------------------------
-Private Function LogUserOn(UserName As String) As Boolean
-    Const StrPROCEDURE As String = "LogUserOn()"
-
-    On Error GoTo ErrorHandler
-
-    If UserName = "" Then Err.Raise HANDLED_ERROR, , "Username blank"
-    
-    CurrentUser.DBGet UserName
-    
-    Debug.Print CurrentUser.UserName & " Logged on"
-    
-    If CurrentUser.UserName = "" Then Err.Raise ACCESS_DENIED
-    
-GracefulExit:
-
-    LogUserOn = True
-
-Exit Function
-
-ErrorExit:
-
-    '***CleanUpCode***
-    LogUserOn = False
-
-Exit Function
-
-ErrorHandler:
-    
-    If Err.Number >= 1000 And Err.Number <= 1500 Then
-        CustomErrorHandler Err.Number
-        Resume GracefulExit
-    End If
-
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
 
 ' ===============================================================
 ' SetGlobalClasses
@@ -358,7 +309,8 @@ Private Function SetGlobalClasses() As Boolean
 
     On Error GoTo ErrorHandler
 
-    Set CurrentUser = New ClsPerson
+    Set CurrentUser = New ClsMember
+    Set MailSystem = New ClsMailSystem
     
     SetGlobalClasses = True
 

@@ -14,6 +14,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
 Option Explicit
 
 
@@ -26,7 +28,7 @@ Private Sub BtnGen_Click()
     
     FileName = "Mod" & TxtModName & " v0,0.bas"
     
-    Open LIBRARY_FILE_PATH & FileName For Output As #ModFile
+    Open IMPORT_FILE_PATH & FileName For Output As #ModFile
     
     'Write header information
     Print #ModFile, "Attribute VB_Name = """ & "Mod" & TxtModName & """"

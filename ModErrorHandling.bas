@@ -114,8 +114,6 @@ Public Function CustomErrorHandler(ErrorCode As Long, Optional Message As String
             End If
             
         Case ACCESS_DENIED
-            MsgBox "Sorry, you do not have the required Access.  " _
-                & "Please contact SM Andy Dixon if you require access", vbCritical, APP_NAME
             
             If Not DEV_MODE Then
                 Application.DisplayAlerts = False

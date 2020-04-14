@@ -14,10 +14,12 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
 Option Explicit
 Private Const NEWLINE = 13
 Private Const INTAB = 9
-Private Declare Function OpenClipboard Lib "user32.dll" (ByVal hWnd As Long) As Long
+Private Declare Function OpenClipboard Lib "user32.dll" (ByVal hwnd As Long) As Long
 Private Declare Function EmptyClipboard Lib "user32.dll" () As Long
 Private Declare Function CloseClipboard Lib "user32.dll" () As Long
 Private Declare Function IsClipboardFormatAvailable Lib "user32.dll" (ByVal wFormat As Long) As Long

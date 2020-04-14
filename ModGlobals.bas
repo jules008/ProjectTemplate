@@ -13,11 +13,10 @@ Option Explicit
 ' ===============================================================
 ' Global Constants
 ' ---------------------------------------------------------------
-Public Const PROJECT_FILE_NAME As String = "RDS Agreement Manager"
-Public Const APP_NAME As String = "RDS Agreement Manager"
-Public Const EXPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\AA Manager\Dev Environment\Library\"
-Public Const IMPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\AA Manager\Dev Environment\Library\"
-Public Const LIBRARY_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\AA Manager\Dev Environment\Library\"
+Public Const PROJECT_FILE_NAME As String = "CDC Tracker"
+Public Const APP_NAME As String = "CDC Tracker"
+Public Const EXPORT_FILE_PATH As String = "G:\Development Areas\CDC Tracker\Library\"
+Public Const IMPORT_FILE_PATH As String = "G:\CDCTracker\"
 Public Const INI_FILE_PATH As String = "\System Files\"
 Public Const INI_FILE_NAME As String = "System.ini"
 Public Const PROTECT_ON As Boolean = True
@@ -57,14 +56,27 @@ Public DEBUG_MODE As Boolean
 Public SEND_EMAILS As Boolean
 Public ENABLE_PRINT As Boolean
 Public DB_PATH As String
+Public DB_FILE_NAME As String
 Public DEV_MODE As Boolean
 Public SYS_PATH As String
+Public CURRENT_USER As String
+Public MENU_ITEM_SEL As Integer
 
 ' ===============================================================
 ' Global Class Declarations
 ' ---------------------------------------------------------------
+Public MainScreen As ClsUIScreen
 Public MailSystem As ClsMailSystem
-
+Public CurrentUser As ClsMember
+Public MenuBar As ClsUIFrame
+Public Logo As ClsUIDashObj
+Public Menu As ClsUIMenu
+Public MenuItem As ClsUIMenuItem
+Public MainFrame As ClsUIFrame
+Public LeftFrame As ClsUIFrame
+Public RightFrame As ClsUIFrame
+Public Header As ClsUIHeader
+Public BtnNewOrder As ClsUIMenuItem
 ' ---------------------------------------------------------------
 ' Others
 ' ---------------------------------------------------------------
@@ -72,11 +84,11 @@ Public MailSystem As ClsMailSystem
 ' ===============================================================
 ' Colours
 ' ---------------------------------------------------------------
-Public Const COLOUR_1 As Long = 5525013
-Public Const COLOUR_2 As Long = 2369842
-Public Const COLOUR_3 As Long = 16777215
-Public Const COLOUR_4 As Long = 10396448
-Public Const COLOUR_5 As Long = 5266544
+Public Const COLOUR_1 As Long = 12298644
+Public Const COLOUR_2 As Long = 10185799
+Public Const COLOUR_3 As Long = 9148699
+Public Const COLOUR_4 As Long = 1383935
+Public Const COLOUR_5 As Long = 4670781
 Public Const COLOUR_6 As Long = 3450623
 Public Const COLOUR_7 As Long = 6893787
 Public Const COLOUR_8 As Long = 16056312
@@ -87,10 +99,55 @@ Public Const COLOUR_11 As Long = 52479
 ' ===============================================================
 ' Enum Declarations
 ' ---------------------------------------------------------------
+Enum EnumTriState
+    xTrue
+    xFalse
+    xError
+End Enum
 
+Enum EnumObjType
+    ObjImage = 1
+    ObjChart = 2
+End Enum
+
+Enum EnumBtnNo
+    EnumMyStation = 1
+    EnumStores
+    EnumReports
+    EnumMyProfile
+    EnumSupport
+    EnumExit
+    EnumNewOrder
+    EnumSupportMsg
+    EnumUserMngt
+    EnumOrderSwitch
+    EnumRemoteOrder
+    EnumSupplierBtn
+    EnumReport1Btn
+    EnumManageDataBtn
+    EnumReport2Btn
+    EnumFindOrderBtn
+    EnumReport3Btn
+    EnumRptSettings
+    EnumReturnStock
+End Enum
 
 ' ===============================================================
 ' Type Declarations
 ' ---------------------------------------------------------------
+Type TypeStyle
+    ForeColour As Long
+    BorderColour As Long
+    BorderWidth As Long
+    FontStyle As String
+    FontBold As Boolean
+    FontSize As Integer
+    FontColour As Long
+    FontXJust As XlHAlign
+    FontYJust As XlVAlign
+    Fill1 As Long
+    Fill2 As Long
+    Shadow As MsoShadowType
+End Type
 
 
