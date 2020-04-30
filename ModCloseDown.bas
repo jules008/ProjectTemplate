@@ -5,7 +5,7 @@ Attribute VB_Name = "ModCloseDown"
 ' v0,1 - Delete menu item no on close down
 ' v0,2 - Made Terminate a function and added Log Off
 '---------------------------------------------------------------
-' Date - 14 Nov 17
+' Date - 15 Apr 20
 '===============================================================
 
 Option Explicit
@@ -41,6 +41,7 @@ Public Function Terminate() As Boolean
             'debug.print MenuItem.Name
             MenuItem.ShpMenuItem.Delete
             MenuItem.Icon.Delete
+            MenuItem.Badge.Delete
             Set MenuItem = Nothing
         Next
         
@@ -54,6 +55,8 @@ Public Function Terminate() As Boolean
         Set Frame = Nothing
         
     Next
+    
+    Application.DisplayFullScreen = False
     
     Set MainScreen = Nothing
     
@@ -72,6 +75,7 @@ ErrorExit:
 
     ModDatabase.DBTerminate
     DeleteAllShapes
+    Application.DisplayFullScreen = False
     
     Terminate = False
 

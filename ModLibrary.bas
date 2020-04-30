@@ -4,8 +4,9 @@ Attribute VB_Name = "ModLibrary"
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added ColourConvert
+' v1.2.0 - Added Total lines of project
 '---------------------------------------------------------------
-' Date - 08 Feb 17
+' Date - 28 Apr 20
 '===============================================================
 
 Option Explicit
@@ -143,12 +144,12 @@ End Sub
 ' ---------------------------------------------------------------
 Sub CopyTextToClipboard()
 
-    Dim obj As New DataObject
+    Dim Obj As New DataObject
     Dim Txt As String
     
     Txt = Chr(9) & "This was copied to the clipboard using VBA!" & Chr(13) & "New Line"
-    obj.SetText Txt
-    obj.PutInClipboard
+    Obj.SetText Txt
+    Obj.PutInClipboard
     
     MsgBox "There is now text copied to your clipboard!", vbInformation, APP_NAME
 
@@ -349,3 +350,34 @@ Function JoinRecordsets(ByVal Rst1 As Recordset, Rst2 As Recordset) As Recordset
     Set JoinRecordsets = Rst1
 End Function
 
+
+Public Sub TotalLinesInProject()
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' This returns the total number of lines in all components of the VBProject
+    ' referenced by VBProj. If VBProj is missing, the VBProject of the ActiveWorkbook
+    ' is used. Returns -1 if the VBProject is locked.
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    
+    Dim VBP As VBIDE.VBProject
+    Dim VBComp As VBIDE.VBComponent
+    Dim LineCount As Long
+    
+    Set VBP = ActiveWorkbook.VBProject
+    
+    If VBP.Protection = vbext_pp_locked Then
+    
+    Exit Sub
+    End If
+    
+    For Each VBComp In VBP.VBComponents
+        LineCount = LineCount + VBComp.CodeModule.CountOfLines
+    Next VBComp
+    
+    MsgBox "Total lines of code = " & LineCount
+End Sub
+
+Function IsTime(Expression As Variant) As Boolean
+    If IsDate(Expression) Then
+        IsTime = (Int(CSng(CDate(Expression))) = 0)
+    End If
+End Function

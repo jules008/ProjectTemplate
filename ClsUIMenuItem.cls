@@ -10,8 +10,9 @@ Attribute VB_Exposed = False
 '===============================================================
 ' Class ClsUIMenuItem
 ' v0,0 - Initial Version
+' v1,0 - Add Badge
 '---------------------------------------------------------------
-' Date - 10 Feb 17
+' Date - 15 Apr 20
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -26,6 +27,8 @@ Private pWidth As Integer
 Private pName As String
 Private pText As String
 Private pIcon As Shape
+Private pBadge As Shape
+Private pBadgeText As String
 Private pSelectStyle As TypeStyle
 Private pUnSelectStyle As TypeStyle
 Private pShpMenuItem As Shape
@@ -114,6 +117,25 @@ Public Property Let Icon(ByVal vNewValue As Shape)
 End Property
 
 '---------------------------------------------------------------
+Public Property Get Badge() As Shape
+    Set Badge = pBadge
+End Property
+
+Public Property Let Badge(ByVal vNewValue As Shape)
+    Set pBadge = vNewValue
+End Property
+
+'---------------------------------------------------------------
+Public Property Get BadgeText() As String
+    BadgeText = pBadgeText
+End Property
+
+Public Property Let BadgeText(ByVal vNewValue As String)
+    pBadgeText = vNewValue
+    pBadge.TextFrame.Characters.Caption = pBadgeText
+End Property
+
+'---------------------------------------------------------------
 Public Property Get SelectStyle() As TypeStyle
     SelectStyle = pSelectStyle
 End Property
@@ -163,9 +185,9 @@ Public Property Let Selected(ByVal vNewValue As Boolean)
     End With
     
     With pShpMenuItem.Line
-        .ForeColor.RGB = Style.BorderColour
         .Weight = Style.BorderWidth
         If .Weight = 0 Then .Visible = msoFalse Else .Visible = msoCTrue
+        .ForeColor.RGB = Style.BorderColour
     End With
     
     With pShpMenuItem.TextFrame
@@ -196,6 +218,7 @@ Public Property Let Visible(ByVal vNewValue As Boolean)
     pVisible = vNewValue
     pShpMenuItem.Visible = vNewValue
     If Not pIcon Is Nothing Then pIcon.Visible = vNewValue
+    If Not pBadge Is Nothing Then pBadge.Visible = vNewValue
 End Property
 
 '---------------------------------------------------------------
@@ -214,6 +237,7 @@ End Property
 Public Sub ReOrder()
     pShpMenuItem.ZOrder msoBringToFront
     If Not pIcon Is Nothing Then pIcon.ZOrder msoBringToFront
+    If Not pBadge Is Nothing Then pBadge.ZOrder msoBringToFront
 End Sub
 
 '---------------------------------------------------------------

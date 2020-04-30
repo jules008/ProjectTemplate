@@ -8,7 +8,7 @@ Attribute VB_Name = "ModUIMenu"
 ' v0,4 - Added Exit Button
 ' v0,5 - Exit button leaves other workbooks open
 '---------------------------------------------------------------
-' Date - 05 Jul 17
+' Date - 15 Apr 20
 '===============================================================
 
 Option Explicit
@@ -40,6 +40,7 @@ Public Function BuildStylesMenu() As Boolean
     
     With MENUITEM_UNSET_STYLE
         .BorderWidth = MENUITEM_UNSET_BORDER_WIDTH
+        .BorderColour = MENUITEM_UNSET_BORDER_COLOUR
         .Fill1 = MENUITEM_UNSET_FILL_1
         .Fill2 = MENUITEM_UNSET_FILL_2
         .Shadow = MENUITEM_UNSET_SHADOW
@@ -52,6 +53,7 @@ Public Function BuildStylesMenu() As Boolean
 
     With MENUITEM_SET_STYLE
         .BorderWidth = MENUITEM_SET_BORDER_WIDTH
+        .BorderColour = MENUITEM_SET_BORDER_COLOUR
         .Fill1 = MENUITEM_SET_FILL_1
         .Fill2 = MENUITEM_SET_FILL_2
         .Shadow = MENUITEM_SET_SHADOW
@@ -127,8 +129,8 @@ Private Function BuildBackDrop() As Boolean
     With MainScreen
         .Style = SCREEN_STYLE
         .Name = "Main Screen"
-        .Top = 10
-        .Left = 10
+        .Top = 0
+        .Left = 0
         .Height = SCREEN_HEIGHT
         .Width = SCREEN_WIDTH
     End With
@@ -159,13 +161,16 @@ End Function
 Private Function BuildMenuBar() As Boolean
     Dim MenuItemText() As String
     Dim MenuItemIcon() As String
+    Dim MenuItemBadge() As String
     Dim i As Integer
     
     Const StrPROCEDURE As String = "BuildMenuBar()"
 
     On Error GoTo ErrorHandler
     
-     MainScreen.Frames.AddItem MenuBar
+    Set Logo = New ClsUIDashObj
+    
+    MainScreen.Frames.AddItem MenuBar
    
    'Menubar
     With MenuBar
@@ -179,19 +184,20 @@ Private Function BuildMenuBar() As Boolean
         .EnableHeader = False
     End With
 
-'    'Logo
-'    With Logo
-'        .ShpDashObj = ShtMain.Shapes("TEMPLATE - Logo").Duplicate
-'        .Name = "Logo"
-'        .EnumObjType = ObjImage
-'        .Visible = True
-'        .Top = LOGO_TOP
-'        .Left = LOGO_LEFT
-'        .Width = LOGO_WIDTH
-'        .Height = LOGO_HEIGHT
-'    End With
+    'Logo
+    MenuBar.DashObs.AddItem Logo
+    
+    With Logo
+        .ShpDashObj = ShtMain.Shapes("TEMPLATE - Logo").Duplicate
+        .Name = "Logo"
+        .EnumObjType = ObjImage
+        .Visible = True
+        .Top = LOGO_TOP
+        .Left = LOGO_LEFT
+        .Width = LOGO_WIDTH
+        .Height = LOGO_HEIGHT
+    End With
 
-'    MenuBar.DashObs.AddItem Logo
     
 
     'menu
@@ -203,6 +209,7 @@ Private Function BuildMenuBar() As Boolean
     'Menu Items
     MenuItemText() = Split(MENUITEM_TEXT, ":")
     MenuItemIcon() = Split(MENUITEM_ICONS, ":")
+    MenuItemBadge() = Split(MENUITEM_BADGES, ":")
 
     For i = 0 To MENUITEM_COUNT - 1
 
@@ -217,6 +224,7 @@ Private Function BuildMenuBar() As Boolean
             .Name = "MenuItem - " & .Text
             .OnAction = "'ModUIMenu.ProcessBtnPress(" & i + 1 & ")'"
             .Icon = ShtMain.Shapes(MenuItemIcon(i)).Duplicate
+            If MenuItemBadge(i) <> "" Then .Badge = ShtMain.Shapes(MenuItemBadge(i)).Duplicate
 
             MenuBar.Menu.AddItem MenuItem
 
@@ -230,6 +238,16 @@ Private Function BuildMenuBar() As Boolean
                 .Left = MenuItem.Left + MENUITEM_ICON_LEFT
                 .Top = MenuItem.Top + MENUITEM_ICON_TOP
             End With
+            
+            If MenuItemBadge(i) <> "" Then
+                With .Badge
+                    .Visible = True
+                    .Name = "Icon - " & MenuItem.Text
+                    .Left = MenuItem.Left + MENUITEM_BADGE_LEFT
+                    .Top = MenuItem.Top + MENUITEM_BADGE_TOP
+                End With
+                .BadgeText = "12"
+           End If
         End With
     Next
     
@@ -489,6 +507,7 @@ Public Function ResetScreen() As Boolean
                 Frame.Menu.RemoveItem MenuItem.Name
                 MenuItem.ShpMenuItem.Delete
                 MenuItem.Icon.Delete
+                MenuItem.Badge.Delete
                 Set MenuItem = Nothing
             Next
             
@@ -507,6 +526,7 @@ Public Function ResetScreen() As Boolean
         MainScreen.Menu.RemoveItem MenuItem.Name
         MenuItem.ShpMenuItem.Delete
         MenuItem.Icon.Delete
+        MenuItem.Badge.Delete
         Set MenuItem = Nothing
     Next
         

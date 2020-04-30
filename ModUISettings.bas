@@ -19,7 +19,7 @@ Attribute VB_Name = "ModUISettings"
 ' v0,15 - Added Report Settings Buton
 ' v0,16 - Added Return Stock Button
 '---------------------------------------------------------------
-' Date - 04 Dec 18
+' Date - 15 Apr 20
 '===============================================================
 
 Option Explicit
@@ -87,15 +87,18 @@ Public Const MENU_TOP As Integer = 180
 Public Const MENU_LEFT As Integer = 10
 Public Const MENUITEM_HEIGHT As Integer = 31
 Public Const MENUITEM_WIDTH As Integer = 150
-Public Const MENUITEM_COUNT As Integer = 6
-Public Const MENUITEM_TEXT = "My Station:Stores:Reports:My Profile:Support:Exit"
-Public Const MENUITEM_ICONS = "TEMPLATE - Icon_Station:TEMPLATE - Icon_Stores:TEMPLATE - Icon_Document:TEMPLATE - Icon_Head:TEMPLATE - Icon_Support:TEMPLATE - Exit"
-Public Const MENUITEM_ICON_TOP As Integer = 5
+Public Const MENUITEM_COUNT As Integer = 5
+Public Const MENUITEM_TEXT = "For Action:Active:Complete:Dashboard:Exit"
+Public Const MENUITEM_ICONS = "TEMPLATE - For Action:TEMPLATE - Active:TEMPLATE - Complete:TEMPLATE - Dashboard:TEMPLATE - Exit"
+Public Const MENUITEM_BADGES = "TEMPLATE - No Action Items::::"
+Public Const MENUITEM_ICON_TOP As Integer = 6
 Public Const MENUITEM_ICON_LEFT As Integer = 5
-Public Const LOGO_TOP As Integer = 15
-Public Const LOGO_LEFT As Integer = 20
-Public Const LOGO_WIDTH As Integer = 126
-Public Const LOGO_HEIGHT As Integer = 60
+Public Const MENUITEM_BADGE_TOP As Integer = -6
+Public Const MENUITEM_BADGE_LEFT As Integer = 125
+Public Const LOGO_TOP As Integer = 50
+Public Const LOGO_LEFT As Integer = 10
+Public Const LOGO_WIDTH As Integer = 90
+Public Const LOGO_HEIGHT As Integer = 40
 
 Public Const HEADER_HEIGHT As Integer = 25
 Public Const HEADER_ICON_TOP As Integer = 5
@@ -286,26 +289,28 @@ Public Const TRANSPARENT_TEXT_BOX_FONT_Y_JUST As Integer = xlVAlignCenter
 ' Main Screen
 ' ---------------------------------------------------------------
 Public Const SCREEN_BORDER_WIDTH As Long = 0
-Public Const SCREEN_FILL_1 As Long = COLOUR_1
-Public Const SCREEN_FILL_2 As Long = COLOUR_1
-Public Const SCREEN_SHADOW As Long = msoShadow21
+Public Const SCREEN_FILL_1 As Long = COLOUR_2
+Public Const SCREEN_FILL_2 As Long = COLOUR_2
+Public Const SCREEN_SHADOW As Long = 0
 
 Public Const MENUBAR_BORDER_WIDTH As Long = 0
-Public Const MENUBAR_FILL_1 As Long = COLOUR_2
-Public Const MENUBAR_FILL_2 As Long = COLOUR_2
+Public Const MENUBAR_FILL_1 As Long = COLOUR_5
+Public Const MENUBAR_FILL_2 As Long = COLOUR_5
 Public Const MENUBAR_SHADOW As Long = msoShadow21
 
-Public Const MENUITEM_UNSET_BORDER_WIDTH As Long = 0
+Public Const MENUITEM_UNSET_BORDER_WIDTH As Long = 1
+Public Const MENUITEM_UNSET_BORDER_COLOUR As Long = COLOUR_3
 Public Const MENUITEM_UNSET_FILL_1 As Long = COLOUR_5
-Public Const MENUITEM_UNSET_FILL_2 As Long = COLOUR_2
+Public Const MENUITEM_UNSET_FILL_2 As Long = COLOUR_5
 Public Const MENUITEM_UNSET_SHADOW As Long = 0
 Public Const MENUITEM_UNSET_FONT_STYLE As String = "Eras Medium ITC"
 Public Const MENUITEM_UNSET_FONT_SIZE As Integer = 12
-Public Const MENUITEM_UNSET_FONT_COLOUR As Long = COLOUR_3
+Public Const MENUITEM_UNSET_FONT_COLOUR As Long = COLOUR_6
 Public Const MENUITEM_UNSET_FONT_X_JUST As Integer = xlHAlignCenter
 Public Const MENUITEM_UNSET_FONT_Y_JUST As Integer = xlVAlignCenter
 
 Public Const MENUITEM_SET_BORDER_WIDTH As Long = 0
+Public Const MENUITEM_SET_BORDER_COLOUR As Long = COLOUR_3
 Public Const MENUITEM_SET_FILL_1 As Long = COLOUR_4
 Public Const MENUITEM_SET_FILL_2 As Long = COLOUR_4
 Public Const MENUITEM_SET_SHADOW As Long = 0

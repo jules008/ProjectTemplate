@@ -4,7 +4,7 @@ Attribute VB_Name = "ModStartUp"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 19 Apr 18
+' Date - 15 Apr 20
 '===============================================================
 
 Option Explicit
@@ -24,7 +24,10 @@ Public Function Initialise() As Boolean
     On Error GoTo ErrorHandler
 
     Terminate
-
+    
+    Application.DisplayFullScreen = True
+    Application.DisplayStatusBar = True
+    
     Application.StatusBar = "Reading INI File....."
     
     If Not ReadINIFile Then Err.Raise HANDLED_ERROR

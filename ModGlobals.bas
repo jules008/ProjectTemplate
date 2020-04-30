@@ -4,7 +4,7 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 23 Apr 18
+' Date - 28 Apr 20
 '===============================================================
 Private Const StrMODULE As String = "ModGlobals"
 
@@ -63,7 +63,7 @@ Public CURRENT_USER As String
 Public MENU_ITEM_SEL As Integer
 
 ' ===============================================================
-' Global Class Declarations
+' Global UI Class Declarations
 ' ---------------------------------------------------------------
 Public MainScreen As ClsUIScreen
 Public MailSystem As ClsMailSystem
@@ -76,7 +76,14 @@ Public MainFrame As ClsUIFrame
 Public LeftFrame As ClsUIFrame
 Public RightFrame As ClsUIFrame
 Public Header As ClsUIHeader
-Public BtnNewOrder As ClsUIMenuItem
+Public BtnNewWorkflow As ClsUIMenuItem
+
+' ===============================================================
+' Global UI Class Declarations
+' ---------------------------------------------------------------
+Public MailSystem As ClsMailSystem
+Public CurrentUser As ClsMember
+Public Workflows As ClsWorkflows
 ' ---------------------------------------------------------------
 ' Others
 ' ---------------------------------------------------------------
@@ -95,6 +102,24 @@ Public Const COLOUR_8 As Long = 16056312
 Public Const COLOUR_9 As Long = 12439241
 Public Const COLOUR_10 As Long = 7864234
 Public Const COLOUR_11 As Long = 52479
+
+' ===============================================================
+' Type Declarations
+' ---------------------------------------------------------------
+Type TypeStyle
+    ForeColour As Long
+    BorderColour As Long
+    BorderWidth As Long
+    FontStyle As String
+    FontBold As Boolean
+    FontSize As Integer
+    FontColour As Long
+    FontXJust As XlHAlign
+    FontYJust As XlVAlign
+    Fill1 As Long
+    Fill2 As Long
+    Shadow As MsoShadowType
+End Type
 
 ' ===============================================================
 ' Enum Declarations
@@ -133,21 +158,23 @@ Enum EnumBtnNo
 End Enum
 
 ' ===============================================================
-' Type Declarations
+' Enum Return Functions
 ' ---------------------------------------------------------------
-Type TypeStyle
-    ForeColour As Long
-    BorderColour As Long
-    BorderWidth As Long
-    FontStyle As String
-    FontBold As Boolean
-    FontSize As Integer
-    FontColour As Long
-    FontXJust As XlHAlign
-    FontYJust As XlVAlign
-    Fill1 As Long
-    Fill2 As Long
-    Shadow As MsoShadowType
-End Type
+Public Function EnRetStepStatus(EnumValue As EnStepStatus) As String
+    Select Case EnumValue
+        Case enNotStarted
+            EnRetStepStatus = "Not Started"
+        Case enStatGreen
+            EnRetStepStatus = "In Progress - Green"
+        Case enStatAmber
+            EnRetStepStatus = "In progress - Amber"
+        Case enStatRed
+            EnRetStepStatus = "In progress - Red"
+        Case enWait
+            EnRetStepStatus = "Waiting"
+        Case enComplete
+            EnRetStepStatus = "Complete"
+    End Select
+End Function
 
 
